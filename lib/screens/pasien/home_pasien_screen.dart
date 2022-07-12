@@ -1,18 +1,25 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:hows_life/providers/auth_providers.dart';
+import 'package:hows_life/providers/home_provider.dart';
 import 'package:hows_life/screens/pasien/daftar_konsultasi_screen.dart';
 import 'package:hows_life/screens/pasien/dapat_konselor_screen.dart';
+import 'package:hows_life/screens/pasien/pemantauan_screen.dart';
 import 'package:hows_life/theme.dart';
+import 'package:hows_life/widgets/custom_drawer.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/button_grid.dart';
 import '../../widgets/button_second_grid.dart';
 import '../../widgets/main_appbar.dart';
 
 class HomePasienScreen extends StatelessWidget {
-  const HomePasienScreen({Key? key}) : super(key: key);
+  static String route = '/pasien/home';
 
-  Widget buildWelcome(BuildContext context) {
+  HomePasienScreen({Key? key}) : super(key: key);
+
+  Widget buildWelcome(BuildContext context, String name) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -25,7 +32,7 @@ class HomePasienScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Selamat pagi, Gabriel!',
+                'Selamat pagi, $name!',
                 style: textBold.copyWith(color: Colors.white, fontSize: 22),
               ),
               Text(
@@ -41,10 +48,10 @@ class HomePasienScreen extends StatelessWidget {
             icon: Icon(Icons.notifications_outlined),
             color: Colors.white,
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DapatKonselorScreen()));
+              Navigator.pushNamed(
+                context,
+                DapatKonselorScreen.route,
+              );
             },
           ),
         ),
@@ -52,15 +59,15 @@ class HomePasienScreen extends StatelessWidget {
     );
   }
 
-  Widget buildMainGrid(BuildContext context) {
+  Widget buildMainGrid(BuildContext context, AuthProvider authProvider) {
     return Row(
       children: [
         ButtonGrid(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DaftarKonsultasiScreen()));
+            Navigator.pushNamed(
+              context,
+              DaftarKonsultasiScreen.route,
+            );
           },
           color: kColorPurple,
           title: 'Daftar Konsultasi',
@@ -68,7 +75,24 @@ class HomePasienScreen extends StatelessWidget {
         ),
         SizedBox(width: 24),
         ButtonGrid(
-          onTap: () {},
+          onTap: () {
+            if (authProvider.pasien.haveOnGoingRequest!) {
+              Navigator.pushNamed(
+                context,
+                PemantauanScreen.route,
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: kColorRed,
+                  content: Text(
+                    'Kamu belum daftar konsultasi!',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+          },
           color: kColorGrey,
           title: 'Pemantauan Perkembangan',
           image: 'images/pantau.png',
@@ -120,14 +144,22 @@ class HomePasienScreen extends StatelessWidget {
     );
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    AuthProvider homeProvider = Provider.of<AuthProvider>(context);
+
+    getHome() async {}
+
     return SafeArea(
       child: Scaffold(
+        // drawer: CustomDrawer(),
         backgroundColor: kColorBlue,
         appBar: mainAppBar(
+          context: context,
           title: Image.asset('images/logo.png'),
           centerTitle: true,
+          // key: _key,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -135,11 +167,11 @@ class HomePasienScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildWelcome(context),
+                buildWelcome(context, homeProvider.pasien.name!),
                 SizedBox(
                   height: 25,
                 ),
-                buildMainGrid(context),
+                buildMainGrid(context, homeProvider),
                 SizedBox(
                   height: 32,
                 ),

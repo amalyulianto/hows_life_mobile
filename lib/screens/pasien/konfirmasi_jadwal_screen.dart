@@ -5,7 +5,9 @@ import 'package:hows_life/widgets/main_appbar.dart';
 import 'package:hows_life/widgets/new_button_row.dart';
 
 class KonfirmasiJadwalScreen extends StatelessWidget {
-  const KonfirmasiJadwalScreen({Key? key}) : super(key: key);
+  KonfirmasiJadwalScreen({Key? key}) : super(key: key);
+
+  static String route = '/pasien/konfirmasi_jadwal';
 
   Widget buildPilihanJadwal({String tanggal = 'Senin', String jam = '00.00'}) {
     return Column(
@@ -31,12 +33,16 @@ class KonfirmasiJadwalScreen extends StatelessWidget {
     );
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
         appBar: mainAppBar(
+          context: context,
+          // key: _key,
           title: Text(
             'Jadwal Kamu',
             style: textBold.copyWith(color: Colors.black),
@@ -113,10 +119,8 @@ class KonfirmasiJadwalScreen extends StatelessWidget {
                     ),
                     NewButtonRow(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TungguJadwalScreen()));
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            TungguJadwalScreen.route, (route) => false);
                       },
                       text: 'Konfirmasi',
                       color: kColorButton,

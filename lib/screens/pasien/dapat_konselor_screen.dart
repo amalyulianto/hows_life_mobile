@@ -6,7 +6,9 @@ import 'package:hows_life/widgets/new_button_row.dart';
 import '../../widgets/new_button.dart';
 
 class DapatKonselorScreen extends StatelessWidget {
-  const DapatKonselorScreen({Key? key}) : super(key: key);
+  static String route = '/pasien/dapat_konselor';
+
+  DapatKonselorScreen({Key? key}) : super(key: key);
 
   Widget buildSocialMediaIcon(
       {required String image, required VoidCallback onTap}) {
@@ -19,12 +21,15 @@ class DapatKonselorScreen extends StatelessWidget {
     );
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
         appBar: mainAppBar(
+            // key: _key,
+            context: context,
             title: Image.asset(
               'images/logo.png',
             ),

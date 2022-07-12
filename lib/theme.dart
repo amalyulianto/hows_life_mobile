@@ -11,6 +11,7 @@ const kColorButton = Color(0xffFFE5B4);
 const kColorGrey = Color(0xffF2F3F7);
 const kColorPurple = Color(0xffDBDFFD);
 const kColorGrey2 = Color(0xffDFF6FF);
+const kColorBlue2 = Color(0xffDBECFD);
 
 TextStyle textBold = GoogleFonts.inter(color: Colors.white, fontWeight: bold);
 TextStyle textMain = GoogleFonts.inter(fontWeight: regular);

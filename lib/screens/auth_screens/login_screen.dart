@@ -9,7 +9,7 @@ import 'login_pasien_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
-
+  static String route = '/auth';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,10 +32,7 @@ class LoginScreen extends StatelessWidget {
               LogInButton(
                 title: 'Pasien',
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginPasienScreen()));
+                  Navigator.pushNamed(context, LoginPasienScreen.route);
                 },
               ),
               SizedBox(
@@ -43,10 +40,7 @@ class LoginScreen extends StatelessWidget {
               ),
               LogInButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginKonselorScreen()));
+                  Navigator.pushNamed(context, LoginKonselorScreen.route);
                 },
                 title: 'Konselor',
                 color: kColorButton,

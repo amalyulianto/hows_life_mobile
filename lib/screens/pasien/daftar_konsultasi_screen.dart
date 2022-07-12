@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hows_life/screens/pasien/konfirmasi_jadwal_screen.dart';
+import 'package:hows_life/screens/pasien/pilih_jadwal_screen.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/main_appbar.dart';
 import 'package:hows_life/widgets/custom_text_field.dart';
@@ -9,6 +10,8 @@ import 'package:hows_life/widgets/new_button.dart';
 
 class DaftarKonsultasiScreen extends StatefulWidget {
   const DaftarKonsultasiScreen({Key? key}) : super(key: key);
+
+  static String route = '/pasien/daftar_konsultasi';
 
   @override
   State<DaftarKonsultasiScreen> createState() => _DaftarKonsultasiScreenState();
@@ -308,12 +311,15 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
     );
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
         appBar: mainAppBar(
+          context: context,
+          // key: _key,
           title: Text(
             'Daftar Konsultasi',
             style: textBold.copyWith(color: Colors.black),
@@ -364,11 +370,9 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                 ),
                 NewButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => KonfirmasiJadwalScreen(),
-                      ),
+                      PilihJadwalScreen.route,
                     );
                   },
                   color: kColorButton,

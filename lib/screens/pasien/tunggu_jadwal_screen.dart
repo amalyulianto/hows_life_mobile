@@ -5,7 +5,9 @@ import 'package:hows_life/widgets/main_appbar.dart';
 import 'package:hows_life/widgets/new_button.dart';
 
 class TungguJadwalScreen extends StatelessWidget {
-  const TungguJadwalScreen({Key? key}) : super(key: key);
+  TungguJadwalScreen({Key? key}) : super(key: key);
+
+  static String route = '/pasien/tunggu_jadwal';
 
   Widget buildPilihanJadwal({String tanggal = 'Senin', String jam = '00.00'}) {
     return Row(
@@ -29,12 +31,16 @@ class TungguJadwalScreen extends StatelessWidget {
     );
   }
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
         appBar: mainAppBar(
+          context: context,
+          // key: _key,
           centerTitle: true,
           title: Image.asset(
             'images/logo.png',
