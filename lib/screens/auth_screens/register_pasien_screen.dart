@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hows_life/screens/auth_screens/login_pasien_screen.dart';
 import 'package:hows_life/screens/auth_screens/login_screen.dart';
 import 'package:hows_life/theme.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_providers.dart';
 import '../../widgets/custom_input_decoration.dart';
@@ -125,8 +126,37 @@ class _RegisterPasienScreenState extends State<RegisterPasienScreen> {
     return TextFormField(
       controller: _tanggalLahirTextController,
       textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.datetime,
-      decoration: buildInputDecoration('Tanggal Lahir', 'Tanggal Lahir'),
+      // keyboardType: TextInputType.datetime,
+
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1940),
+          lastDate: DateTime(2025),
+        );
+        if (pickedDate != null) {
+          setState(() {
+            _tanggalLahirTextController.text =
+                DateFormat('yyyy-MM-dd').format(pickedDate);
+          });
+        }
+      },
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 17, horizontal: 15),
+        // labelText: label,
+        hintText: 'Tanggal Lahir',
+        // icon: Icon(Icons.calendar_today),
+        filled: true,
+        fillColor: kColorGrey,
+        focusColor: kColorGrey,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            50,
+          ),
+          borderSide: BorderSide(width: 0),
+        ),
+      ),
     );
   }
 
@@ -177,6 +207,15 @@ class _RegisterPasienScreenState extends State<RegisterPasienScreen> {
       textInputAction: TextInputAction.next,
       obscureText: true,
       decoration: buildInputDecoration('Kata Sandi', 'Kata Sandi'),
+    );
+  }
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
     );
   }
 

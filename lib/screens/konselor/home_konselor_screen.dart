@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 // ignore_for_file: prefer_const_constructors
 
 import 'package:hows_life/providers/auth_providers.dart';
+import 'package:hows_life/providers/daftar_pasien_provider.dart';
+import 'package:hows_life/screens/konselor/my_jadwal_screen.dart';
+import 'package:hows_life/screens/konselor/pasien_detail_screen.dart';
+import 'package:hows_life/screens/konselor/pasien_requests_screen.dart';
 import 'package:hows_life/screens/pasien/daftar_konsultasi_screen.dart';
 import 'package:hows_life/screens/pasien/dapat_konselor_screen.dart';
 import 'package:hows_life/screens/pasien/pemantauan_screen.dart';
@@ -45,37 +49,53 @@ class HomeKonselorScreen extends StatelessWidget {
     );
   }
 
-  Widget buildMainGrid(BuildContext context, AuthProvider authProvider) {
+  Widget buildMainGrid(BuildContext context, AuthProvider authProvider,
+      DaftarPasienProvider daftarPasienProvider) {
     return Column(
       children: [
         KonselorGridButton(
-          onTap: () {},
+          onTap: () async {
+            Navigator.pushNamed(context, MyJadwalScreen.route);
+          },
           text: 'Jadwal Anda',
         ),
         SizedBox(
           height: 12,
         ),
         KonselorGridButton(
-          onTap: () {},
+          onTap: () async {
+            await daftarPasienProvider
+                .getDaftarPasien(authProvider.user.authToken!);
+            Navigator.pushNamed(context, PasienRequestsScreen.route);
+          },
           text: 'Jadwal Permintaan Pasien',
         ),
       ],
     );
   }
 
-  Widget buildDaftarPasien() {
+  Widget buildDaftarPasien(BuildContext context) {
     return Column(
       children: [
-        KonselorGridButton(
-          onTap: () {},
-          text: 'Jadwal Anda',
+        SizedBox(
+          height: 12,
+        ),
+        PasienListRow(
+          date: '21 agusts',
+          gender: 'laki-laki',
+          text: 'Amal',
+          onTap: () {
+            Navigator.pushNamed(context, PasienDetailScreen.route);
+          },
         ),
         SizedBox(
           height: 12,
         ),
-        KonselorGridButton(
+        PasienListRow(
+          date: '21 agusts',
+          gender: 'laki-laki',
+          text: 'Amal',
           onTap: () {},
-          text: 'Jadwal Permintaan Pasien',
         ),
       ],
     );
@@ -85,9 +105,8 @@ class HomeKonselorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider homeProvider = Provider.of<AuthProvider>(context);
-
-    getHome() async {}
-
+    DaftarPasienProvider daftarPasienProvider =
+        Provider.of<DaftarPasienProvider>(context);
     return SafeArea(
       child: Scaffold(
         // drawer: CustomDrawer(),
@@ -108,12 +127,12 @@ class HomeKonselorScreen extends StatelessWidget {
                 SizedBox(
                   height: 25,
                 ),
-                buildMainGrid(context, homeProvider),
+                buildMainGrid(context, homeProvider, daftarPasienProvider),
                 SizedBox(
                   height: 32,
                 ),
                 Text(
-                  'Artikel untuk kamu',
+                  'Daftar Pasien',
                   style: textBold.copyWith(
                     color: Colors.white,
                     fontSize: 20,
@@ -122,7 +141,28 @@ class HomeKonselorScreen extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                buildDaftarPasien(),
+                Column(
+                  children: daftarPasienProvider.confirmedPasien
+                      .map(
+                        (e) => Column(
+                          children: [
+                            PasienListRow(
+                              date: e.age.toString(),
+                              gender: e.kelamin!,
+                              text: e.name!,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, PasienDetailScreen.route);
+                              },
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
                 SizedBox(
                   height: 30,
                 ),
@@ -178,6 +218,73 @@ class KonselorGridButton extends StatelessWidget {
                 color: Colors.white,
                 size: 20,
               ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PasienListRow extends StatelessWidget {
+  PasienListRow(
+      {Key? key,
+      required this.date,
+      required this.gender,
+      required this.text,
+      required this.onTap})
+      : super(key: key);
+  final String text;
+  final String gender;
+  final String date;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: 25,
+          vertical: 20,
+        ),
+        decoration: BoxDecoration(
+          color: kColorBlue2,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  text,
+                  style: textMain.copyWith(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  gender,
+                  style: textMain.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  date,
+                  style: textMain.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.black87),
+              padding: EdgeInsets.all(4),
+              child: CircleAvatar(),
             )
           ],
         ),

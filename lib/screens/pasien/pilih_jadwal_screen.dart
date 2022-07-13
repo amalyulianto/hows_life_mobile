@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hows_life/screens/pasien/konfirmasi_jadwal_screen.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/main_appbar.dart';
+import 'package:hows_life/widgets/new_button.dart';
+import 'package:intl/intl.dart';
 
 class PilihJadwalScreen extends StatefulWidget {
   const PilihJadwalScreen({Key? key}) : super(key: key);
@@ -15,6 +18,8 @@ class _PilihJadwalScreenState extends State<PilihJadwalScreen> {
   int _selectedDate = 0;
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+  TextEditingController _pickedDate = TextEditingController();
+  DateTime datee = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,63 +36,76 @@ class _PilihJadwalScreenState extends State<PilihJadwalScreen> {
           ),
         ),
         backgroundColor: kColorBlue,
-        body: SingleChildScrollView(
+        body: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DateButton(
-                selectedIndexDate: 1,
-              )
+              Text(
+                'Silakan pilih tanggal',
+                style: textBold.copyWith(color: Colors.white, fontSize: 26),
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                ),
+                child: GestureDetector(
+                  child: TextFormField(
+                    controller: _pickedDate,
+                    textInputAction: TextInputAction.next,
+                    // keyboardType: TextInputType.datetime,
+
+                    onTap: () async {
+                      DateTime? date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1940),
+                        lastDate: DateTime(2025),
+                      );
+                      if (_pickedDate != null) {
+                        setState(() {
+                          _pickedDate.text =
+                              DateFormat('yyyy-MM-dd').format(date!);
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 17, horizontal: 15),
+                      // labelText: label,
+                      hintText: 'Tanggal',
+                      // icon: Icon(Icons.calendar_today),
+                      filled: true,
+                      fillColor: kColorGrey,
+                      focusColor: kColorGrey,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          50,
+                        ),
+                        borderSide: BorderSide(width: 0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: NewButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, KonfirmasiJadwalScreen.route);
+                    },
+                    color: kColorButton,
+                    text: 'Kirim Jadwal'),
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class DateButton extends StatelessWidget {
-  const DateButton({
-    required this.selectedIndexDate,
-    Key? key,
-  }) : super(key: key);
-
-  final int selectedIndexDate;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // selectedDate = 0;
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
-        decoration: BoxDecoration(
-            color: kColorSubButton,
-            borderRadius: BorderRadius.circular(
-              15,
-            )),
-        child: Column(
-          children: [
-            Text(
-              'SEN',
-              style: textMain.copyWith(
-                color: Colors.black,
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              '29',
-              style: textBold.copyWith(
-                color: Colors.black,
-                fontSize: 20,
-              ),
-            ),
-          ],
         ),
       ),
     );

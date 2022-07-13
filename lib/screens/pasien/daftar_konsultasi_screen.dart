@@ -1,12 +1,15 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:hows_life/providers/auth_providers.dart';
 import 'package:hows_life/screens/pasien/konfirmasi_jadwal_screen.dart';
 import 'package:hows_life/screens/pasien/pilih_jadwal_screen.dart';
+import 'package:hows_life/services/daftar_services.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/main_appbar.dart';
 import 'package:hows_life/widgets/custom_text_field.dart';
 import 'package:hows_life/widgets/new_button.dart';
+import 'package:provider/provider.dart';
 
 class DaftarKonsultasiScreen extends StatefulWidget {
   const DaftarKonsultasiScreen({Key? key}) : super(key: key);
@@ -21,6 +24,9 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
   int selectedValueKonselorType = 0;
   int selectedValueKonselorGender = 0;
   int selectedValueKonseling = 0;
+  String konselorType = 'sebaya';
+  String konselorGender = 'perempuan';
+  bool riwayatKonseling = false;
   String dropdownValueSubjekMasalah = 'Keluarga';
   TextEditingController controllerRiwayat = TextEditingController();
   TextEditingController controllerKendala = TextEditingController();
@@ -52,6 +58,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                       setState(
                         () {
                           selectedValueKonselorGender = 0;
+                          konselorGender = 'perempuan';
                         },
                       );
                     },
@@ -79,6 +86,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                       setState(
                         () {
                           selectedValueKonselorGender = 1;
+                          konselorGender = 'laki-laki';
                         },
                       );
                     },
@@ -106,6 +114,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                 setState(
                   () {
                     selectedValueKonselorGender = 2;
+                    konselorGender = 'bebas';
                   },
                 );
               },
@@ -138,6 +147,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                   setState(
                     () {
                       selectedValueKonselorType = 0;
+                      konselorType = 'sebaya';
                     },
                   );
                 },
@@ -165,6 +175,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                   setState(
                     () {
                       selectedValueKonselorType = 1;
+                      konselorType = 'profesional';
                     },
                   );
                 },
@@ -199,6 +210,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                   setState(
                     () {
                       selectedValueKonseling = 0;
+                      riwayatKonseling = true;
                     },
                   );
                 },
@@ -226,6 +238,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                   setState(
                     () {
                       selectedValueKonseling = 1;
+                      riwayatKonseling = false;
                     },
                   );
                 },
@@ -314,6 +327,7 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
@@ -369,11 +383,46 @@ class _DaftarKonsultasiScreenState extends State<DaftarKonsultasiScreen> {
                   height: 24,
                 ),
                 NewButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      PilihJadwalScreen.route,
-                    );
+                  onPressed: () async {
+                    print(riwayatKonseling);
+                    print(konselorGender);
+                    print(konselorType);
+                    print(controllerKendala.text);
+                    print(controllerRiwayat.text);
+                    print(controllerUsaha.text);
+                    print(dropdownValueSubjekMasalah.toLowerCase());
+
+                    if (await DaftarServices().daftarKonsultasi(
+                        riwayat: true,
+                        jenisKonselor: 'sebaya',
+                        kelaminKonselor: 'perempuan',
+                        subject: 'keluarga',
+                        masalah: 'apasi',
+                        usaha: 'tidak ada',
+                        kendala: 'kendalaa',
+                        token: authProvider.user.authToken!)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: kColorGreen,
+                          content: Text(
+                            'Berhasil mengirim detail konsultasi',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                      Navigator.pushReplacementNamed(
+                          context, PilihJadwalScreen.route);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: kColorRed,
+                          content: Text(
+                            'Gagal Konfirmasi!',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   color: kColorButton,
                   text: 'Daftar',

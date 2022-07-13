@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:hows_life/providers/daftar_pasien_provider.dart';
 import 'package:hows_life/screens/konselor/home_konselor_screen.dart';
+import 'package:hows_life/services/daftar_services.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/loading_button.dart';
 import 'package:hows_life/widgets/new_button.dart';
@@ -55,6 +57,8 @@ class _LoginKonselorScreenState extends State<LoginKonselorScreen> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    DaftarPasienProvider daftarPasienProvider =
+        Provider.of<DaftarPasienProvider>(context);
     handleSignIn() async {
       setState(() {
         isLoading = true;
@@ -84,7 +88,9 @@ class _LoginKonselorScreenState extends State<LoginKonselorScreen> {
             ),
           ),
         );
-        createUserSession(authProvider.user);
+        await daftarPasienProvider
+            .getConfirmedPasien(authProvider.user.authToken!);
+        // createUserSession(authProvider.user);
         Navigator.pushNamedAndRemoveUntil(
             context, HomeKonselorScreen.route, (route) => false);
       } else {

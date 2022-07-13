@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hows_life/providers/auth_providers.dart';
 import 'package:hows_life/screens/pasien/home_pasien_screen.dart';
+import 'package:hows_life/services/daftar_services.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/main_appbar.dart';
 import 'package:hows_life/widgets/new_button.dart';
+import 'package:provider/provider.dart';
 
 class TungguJadwalScreen extends StatelessWidget {
   TungguJadwalScreen({Key? key}) : super(key: key);
@@ -35,6 +38,8 @@ class TungguJadwalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: kColorBlue,
@@ -113,7 +118,32 @@ class TungguJadwalScreen extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (await DaftarServices().batalkanJadwal(
+                              token: authProvider.user.authToken!)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: kColorGreen,
+                                content: Text(
+                                  'Berhasil batalin jadwal',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                HomePasienScreen.route, (route) => false);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: kColorRed,
+                                content: Text(
+                                  'Gagal batalin ya gengs',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                        },
                         child: Text(
                           'Batalkan',
                           style: textMain.copyWith(

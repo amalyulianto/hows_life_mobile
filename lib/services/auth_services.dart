@@ -25,7 +25,7 @@ class AuthService {
         'password': password,
         'jenis_kelamin': jenisKelamin,
         'tempat_lahir': tempatLahir,
-        'tanggal_lahir': '2002-01-01',
+        'tanggal_lahir': tanggalLahir,
         'no_induk': noInduk,
         'no_telepon': noTelp,
       },

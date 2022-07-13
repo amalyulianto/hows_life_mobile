@@ -6,6 +6,7 @@ import 'package:hows_life/providers/home_provider.dart';
 import 'package:hows_life/screens/pasien/daftar_konsultasi_screen.dart';
 import 'package:hows_life/screens/pasien/dapat_konselor_screen.dart';
 import 'package:hows_life/screens/pasien/pemantauan_screen.dart';
+import 'package:hows_life/screens/pasien/tunggu_jadwal_screen.dart';
 import 'package:hows_life/theme.dart';
 import 'package:hows_life/widgets/custom_drawer.dart';
 import 'package:provider/provider.dart';
@@ -64,10 +65,22 @@ class HomePasienScreen extends StatelessWidget {
       children: [
         ButtonGrid(
           onTap: () {
-            Navigator.pushNamed(
-              context,
-              DaftarKonsultasiScreen.route,
-            );
+            if (!authProvider.pasien.haveOnGoingRequest!) {
+              Navigator.pushNamed(
+                context,
+                DaftarKonsultasiScreen.route,
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: kColorRed,
+                  content: Text(
+                    'Kamu sudah daftar konsultasi!',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
           },
           color: kColorPurple,
           title: 'Daftar Konsultasi',
@@ -76,20 +89,23 @@ class HomePasienScreen extends StatelessWidget {
         SizedBox(width: 24),
         ButtonGrid(
           onTap: () {
-            if (authProvider.pasien.haveOnGoingRequest!) {
-              Navigator.pushNamed(
-                context,
-                PemantauanScreen.route,
-              );
-            } else {
+            print(authProvider.pasien.status);
+            if (authProvider.pasien.status == 'waiting') {
+              Navigator.pushNamed(context, TungguJadwalScreen.route);
+            } else if (authProvider.pasien.status == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: kColorRed,
                   content: Text(
-                    'Kamu belum daftar konsultasi!',
+                    'Belum daftar ya gengs',
                     textAlign: TextAlign.center,
                   ),
                 ),
+              );
+            } else {
+              Navigator.pushNamed(
+                context,
+                PemantauanScreen.route,
               );
             }
           },
@@ -148,8 +164,6 @@ class HomePasienScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthProvider homeProvider = Provider.of<AuthProvider>(context);
-
-    getHome() async {}
 
     return SafeArea(
       child: Scaffold(
