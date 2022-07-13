@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hows_life/providers/daftar_pasien_provider.dart';
+import 'package:hows_life/screens/auth_screens/register_konselor_screen.dart';
 import 'package:hows_life/screens/konselor/home_konselor_screen.dart';
 import 'package:hows_life/services/daftar_services.dart';
 import 'package:hows_life/theme.dart';
@@ -119,6 +120,7 @@ class _LoginKonselorScreenState extends State<LoginKonselorScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Spacer(),
                 Text(
                   'Masuk sebagai Konselor',
                   style: textBold.copyWith(color: Colors.white, fontSize: 24),
@@ -140,7 +142,22 @@ class _LoginKonselorScreenState extends State<LoginKonselorScreen> {
                         onPressed: handleSignIn,
                         text: 'Masuk',
                         color: kColorButton,
-                      )
+                      ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, RegisterKonselorScreen.route);
+                  },
+                  child: Text(
+                    'Belum mempunyai akun? Daftar di sini',
+                    style: textMain.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
               ],
             ),
           ),

@@ -49,6 +49,49 @@ class AuthService {
     }
   }
 
+  Future<UserModel> registerKonselor({
+    required String name,
+    required String email,
+    required String password,
+    required String jenisKelamin,
+    required String tempatLahir,
+    required String tanggalLahir,
+    required String noInduk,
+    required String noTelp,
+  }) async {
+    var url = Uri.parse('$baseUrl/auth/register/konselor');
+    var headers = {'Content-Type': 'application/json'};
+    var body = jsonEncode(
+      {
+        'email': email,
+        'name': name,
+        'password': password,
+        'jenis_kelamin': jenisKelamin,
+        'tempat_lahir': tempatLahir,
+        'tanggal_lahir': tanggalLahir,
+        'no_induk': noInduk,
+        'no_telepon': noTelp,
+      },
+    );
+
+    var response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 201) {
+      print(response.body);
+      var data = jsonDecode(response.body);
+      UserModel user = UserModel.fromJson(data);
+      user.authToken = data['userId'];
+      return user;
+    } else {
+      print(response.body);
+      throw Exception('Gagal Register');
+    }
+  }
+
   Future<UserModel> login({
     required String email,
     required String password,

@@ -52,6 +52,36 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> registerKonselor({
+    required String name,
+    required String email,
+    required String password,
+    required String jenisKelamin,
+    required String tempatLahir,
+    required String tanggalLahir,
+    required String noInduk,
+    required String noTelp,
+  }) async {
+    try {
+      UserModel user = await AuthService().register(
+        email: email,
+        name: name,
+        password: password,
+        tempatLahir: tempatLahir,
+        jenisKelamin: jenisKelamin,
+        tanggalLahir: tanggalLahir,
+        noInduk: noInduk,
+        noTelp: noTelp,
+      );
+      _user = user;
+      return true;
+    } catch (e) {
+      print(e);
+      print('GAGAL');
+      return false;
+    }
+  }
+
   Future<bool> login({required String email, required String password}) async {
     try {
       UserModel user =

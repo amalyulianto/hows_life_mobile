@@ -8,6 +8,7 @@ import 'package:hows_life/providers/pasien_request_provider.dart';
 import 'package:hows_life/screens/auth_screens/login_konselor_screen.dart';
 import 'package:hows_life/screens/auth_screens/login_pasien_screen.dart';
 import 'package:hows_life/screens/auth_screens/login_screen.dart';
+import 'package:hows_life/screens/auth_screens/register_konselor_screen.dart';
 import 'package:hows_life/screens/auth_screens/register_pasien_screen.dart';
 import 'package:hows_life/screens/konselor/home_konselor_screen.dart';
 import 'package:hows_life/screens/konselor/konsultasi_request_screen.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
           MyJadwalScreen.route: (context) => MyJadwalScreen(),
           KonsultasiRequestScreen.route: (context) => KonsultasiRequestScreen(),
           PasienDetailScreen.route: (contex) => PasienDetailScreen(),
+          RegisterKonselorScreen.route: (context) => RegisterKonselorScreen(),
         },
         home: SplashScreen(),
       ),
